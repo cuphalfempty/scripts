@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ ! -n "$1" ]; then
+    echo "Select source file"
+    return 1
+fi
+
+SRC_FILE="$1"
+
+if [ ! -f "$SRC_FILE" ]; then
+    echo "Filename invalid"
+    return 1
+fi
+
+IMAGE_INFO=$( identify -verbose "$SRC_FILE" | grep 'exif:DateTime:' )
+if [ ! -n "$IMAGE_INFO" ]; then
+    echo "Unable to fetch creation date"
+    return 1
+fi
+
+OLD_NAME=$( basename "$1" )
+IMAGE_EXTENSION="${1##*.}"
+IMAGE_DATE="${IMAGE_INFO:19:4}-${IMAGE_INFO:24:2}-${IMAGE_INFO:27:2}"
+NEW_NAME="$( date --date="${IMAGE_DATE}T${IMAGE_INFO:30}" +%Y%m%d_%H%M%S).$IMAGE_EXTENSION"
+
+if [ -f "$NEW_NAME" ]; then
+    echo "Target file exists $NEW_NAME"
+    return 1
+fi
+
+mv "$1" "$NEW_NAME"
+echo "$1 -> $NEW_NAME"
+
+# vim: filetype=sh:
