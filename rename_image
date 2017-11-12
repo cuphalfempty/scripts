@@ -28,6 +28,14 @@ if [ -f "$NEW_NAME" ]; then
     exit 1
 fi
 
+read -p "Do you want to rename file to '$NEW_NAME'? (y/n)" -n 1 -r
+echo
+if [[ ! $REPLY =~ [Yy]$ ]]
+then
+    echo "Abort"
+    exit 0
+fi
+
 mv "$1" "$NEW_NAME"
 echo "$1 -> $NEW_NAME"
 
