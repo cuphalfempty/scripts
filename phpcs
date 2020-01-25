@@ -1,0 +1,2 @@
+#!/bin/bash
+docker run -it --rm -u "$(id -u):$(id -g)" -v "$HOME/Builds:/$HOME/Builds" -v "/tmp:/tmp" -v "$(pwd):/app" -w /app adamculp/php-code-quality:latest php /usr/local/lib/php-code-quality/vendor/bin/phpcs "$@"
